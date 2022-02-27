@@ -5,14 +5,23 @@
 
   const sceneInfo = [
     {
+      // 0
       type: 'sticky',
       heightNum: 5, // 각 기기에 대응할 수 있게, 브라우저 높이의 5배로 scrollHeight 세팅
       scrollHeight: 0,
       objs: {
         container: document.querySelector('#scroll-section-0'),
+        messageA: document.querySelector('#scroll-section-0 .main-message.a'),
+				messageB: document.querySelector('#scroll-section-0 .main-message.b'),
+				messageC: document.querySelector('#scroll-section-0 .main-message.c'),
+				messageD: document.querySelector('#scroll-section-0 .main-message.d'),
       },
+      values: {
+        messageA_opacity: [0, 1],
+      }
     },
     {
+      // 1
       type: 'normal',
       heightNum: 5,
       scrollHeight: 0,
@@ -21,6 +30,7 @@
       },
     },
     {
+      // 2
       type: 'sticky',
       heightNum: 5,
       scrollHeight: 0,
@@ -29,6 +39,7 @@
       },
     },
     {
+      // 3
       type: 'normal',
       heightNum: 5,
       scrollHeight: 0,
@@ -57,6 +68,40 @@
     }
     document.body.setAttribute('id', `show-scene-${currentScene}`);
   };
+  
+  // currentYOffset : 현재 currentScene에서 스크롤된 크기
+  const calcValues = (values, currentYOffset) => {
+    let rv;
+
+    // 현재 scene에서 scroll된 범위를 비율로 구하기
+    let scrollRatio = currentYOffset / sceneInfo[currentScene].scrollHeight;
+    rv = scrollRatio * (values[1] - values[0]) + values[0];
+
+    return rv;
+  };
+
+  const playAnimation = () => {
+    const objs = sceneInfo[currentScene].objs;
+    const values = sceneInfo[currentScene].values;
+    const currentYOffset = yOffset - prevScrollHeight;
+
+    switch (currentScene) {
+      case 0:
+        let messageA_opacity_in = calcValues(values.messageA_opacity, currentYOffset);
+        objs.messageA.style.opacity = messageA_opacity_in;
+
+        break;
+      case 1:
+        console.log('1')
+        break;
+      case 2:
+        console.log('2')
+        break;
+      case 3:
+        console.log('3')
+        break;
+    }
+  };
 
   const scrollLoop = () => {
     prevScrollHeight = 0;
@@ -74,6 +119,8 @@
       currentScene--;
       document.body.setAttribute('id', `show-scene-${currentScene}`);
     }
+
+    playAnimation();
   };
   
   window.addEventListener('resize', setLayout);
