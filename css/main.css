@@ -26,18 +26,18 @@ a {
 	overflow-x: hidden;
 }
 .global-nav {
-	position: absolute;
-	top: 0;
-	left: 0;
+	position: absolute; /* glonal-nav가 scroll section의 height를 차지하지 않게 방지 */
+	top: 0; /* glonal-nav가 scroll section의 height를 차지하지 않게 방지 */
+	left: 0; /* glonal-nav가 scroll section의 height를 차지하지 않게 방지 */
 	z-index: 10;
 	width: 100%;
 	height: 44px;
 	padding: 0 1rem;
 }
 .local-nav {
-	position: absolute;
-	top: 45px;
-	left: 0;
+	position: absolute; /* local-nav가 scroll section의 height를 차지하지 않게 방지 */
+	top: 45px; /* local-nav가 scroll section의 height를 차지하지 않게 방지 */
+	left: 0; /* local-nav가 scroll section의 height를 차지하지 않게 방지 */
 	z-index: 11;
 	width: 100%;
 	height: 52px;
