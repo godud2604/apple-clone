@@ -18,8 +18,9 @@
 				messageD: document.querySelector('#scroll-section-0 .main-message.d'),
       },
       values: {
-        messageA_opacity: [0, 1, { start: 0.1, end: 0.2 }],
-        messageB_opacity: [0, 1, { start: 0.3, end: 0.4 }],
+        messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
+        messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
+        messageA_opacity_out: [1, 0, { start: 0.25, end: 0.3 }],
       }
     },
     {
@@ -102,12 +103,22 @@
   const playAnimation = () => {
     const objs = sceneInfo[currentScene].objs;
     const values = sceneInfo[currentScene].values;
-    const currentYOffset = yOffset - prevScrollHeight;
+    const currentYOffset = yOffset - prevScrollHeight; // 현재 씬에서 스크롤된 높이
+    const scrollHeight = sceneInfo[currentScene].scrollHeight; // 현재 씬의 높이
+    const scrollRatio = currentYOffset / scrollHeight; // 현재 씬에서 스크롤된 비율
 
     switch (currentScene) {
       case 0:
-        let messageA_opacity_in = calcValues(values.messageA_opacity, currentYOffset);
-        objs.messageA.style.opacity = messageA_opacity_in;
+        const messageA_opacity_in = calcValues(values.messageA_opacity_in, currentYOffset);
+        const messageA_opacity_out = calcValues(values.messageA_opacity_out, currentYOffset);
+
+        if (scrollRatio <= 0.22) {
+          // in
+          objs.messageA.style.opacity = messageA_opacity_in;
+        } else {
+          // out
+          objs.messageA.style.opacity = messageA_opacity_out;
+        }
 
         break;
       case 1:
