@@ -1,9 +1,9 @@
+
 (() => {
   let yOffset = 0; // window.pageYOffset 대신 쓸 변수
   let prevScrollHeight = 0; // 현재 스크롤 위치(yOffset)보다 이전에 위치한 스크롤 섹션들의 스크롤 높이 값의 합
   let currentScene = 0; // 현재 활성화된(눈 앞에 보고있는) scene(scroll-section)
   let enterNewScene = false; // 새로운 scene이 시작되는 순간 true로 변경
-
   const sceneInfo = [
     {
       // 0
@@ -13,11 +13,17 @@
       objs: {
         container: document.querySelector('#scroll-section-0'),
         messageA: document.querySelector('#scroll-section-0 .main-message.a'),
-				messageB: document.querySelector('#scroll-section-0 .main-message.b'),
-				messageC: document.querySelector('#scroll-section-0 .main-message.c'),
-				messageD: document.querySelector('#scroll-section-0 .main-message.d'),
+        messageB: document.querySelector('#scroll-section-0 .main-message.b'),
+        messageC: document.querySelector('#scroll-section-0 .main-message.c'),
+        messageD: document.querySelector('#scroll-section-0 .main-message.d'),
+        canvas: document.querySelector('#video-canvas-0'),
+        context: document.querySelector('#video-canvas-0').getContext('2d'),
+        videoImages: [],
       },
       values: {
+        videoImageCount: 300,
+        imageSequence: [0, 299],
+  
         messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
         messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
         messageC_opacity_in: [0, 1, { start: 0.5, end: 0.6 }],
@@ -90,10 +96,21 @@
         canvasCaption: document.querySelector('.canvas-caption')
       },
       values: {
-
+  
       }
     },
   ];
+
+  const setCanvasImages = () => {
+    let imgElem;
+
+    for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
+      // imgElem = document.createElement('img');
+      imgElem = new Image();
+      imgElem.src = `./video/001/IMG_${6726 + i}.JPG`;
+      sceneInfo[0].objs.videoImages.push(imgElem);
+    }
+  };
 
   // 각 스크롤 섹션의 높이 세팅
   const setLayout = () => {
@@ -117,6 +134,9 @@
       }
     }
     document.body.setAttribute('id', `show-scene-${currentScene}`);
+
+    const heightRatio = window.innerHeight / 1080;
+    sceneInfo[0].objs.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
   };
   
   // currentYOffset : 현재 currentScene에서 스크롤된 크기
@@ -156,7 +176,9 @@
 
     switch (currentScene) {
       case 0:
-        // console.log('0 play');
+        let sequence = Math.round(calcValues(values.imageSequence, currentYOffset));
+        objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+
         if (scrollRatio <= 0.22) {
         // in
           objs.messageA.style.opacity = calcValues(values.messageA_opacity_in, currentYOffset);
@@ -267,13 +289,26 @@
   };
   
   window.addEventListener('resize', setLayout);
-  window.addEventListener('scroll', () => {
-    yOffset = window.pageYOffset;
-    scrollLoop();
-  });
 
   // window.addEventListener('DOMContentLoaded', setLayout);
-  window.addEventListener('load', setLayout);
+  window.addEventListener('load', () => {
+    setLayout();
+    document.body.classList.remove('before-load');
+    setLayout();
+    sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
 
-  setLayout();
+    window.addEventListener('scroll', () => {
+      yOffset = window.pageYOffset;
+      scrollLoop();
+    });
+
+    document.querySelector('.loading').addEventListener('transitionend', (e) => {
+      document.body.removeChild(e.currentTarget);
+    });
+  });
+
+  setLayout();  
+  setCanvasImages();
+ 
+
 })();

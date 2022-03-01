@@ -18,9 +18,9 @@ a {
 	text-decoration: none;
 }
 
-/* body.before-load {
+body.before-load {
 	overflow: hidden;
-} */
+}
 .container {
 	/* iPhone 가로 스크롤 방지 */
 	overflow-x: hidden;
@@ -216,12 +216,12 @@ a {
 	opacity: 0;
 	transition: 0.5s;
 }
-/* .before-load .container {
+.before-load .container {
     display: none;
 }
 .before-load .loading {
 	opacity: 1;
-} */
+}
 @keyframes loading-spin {
 	100% { transform: rotate(360deg); }
 }
